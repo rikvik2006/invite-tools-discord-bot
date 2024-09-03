@@ -1,0 +1,25 @@
+{
+  "name": "invite-tools-discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "pnpm nodemon ./src/index.ts",
+    "start": "node .",
+    "build": "pnpm tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.16.1",
+    "dotenv": "^16.4.5",
+    "glob": "^11.0.0",
+    "nodemon": "^3.1.4",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.2",
+    "ts-node": "^10.9.2"
+  }
+}
