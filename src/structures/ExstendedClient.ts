@@ -5,9 +5,11 @@ import {
     REST,
     Routes,
 } from "discord.js";
+import { glob } from "glob";
 import { CommandType } from "../typings/Command";
 import { RegisterCommandOptions } from "../typings/Client";
 import { BOT_TOKEN, CLIENT_ID } from "../utils/environment";
+import path from "path";
 
 export class ExtendedClient extends Client {
     commands: Collection<string, CommandType> = new Collection();
@@ -17,7 +19,8 @@ export class ExtendedClient extends Client {
     }
 
     async importFile(filePath: string) {
-        return await import(filePath);
+        const importedFile = await import(filePath);
+        return importedFile;
     }
 
     async registerCommand({ commands, guildId }: RegisterCommandOptions) {
@@ -36,7 +39,32 @@ export class ExtendedClient extends Client {
         }
     }
 
+    async loadModules() {
+        this.commandHandler();
+    }
+
+    async commandHandler() {
+        const commandFilesPath = await glob(
+            `${path.join(__dirname, "..", "commands")}/*/*{.ts,.js}`,
+            {
+                absolute: true,
+            }
+        );
+        console.log(commandFilesPath);
+
+        for (let filePath in commandFilesPath) {
+            const command: CommandType = await this.importFile(filePath);
+            console.log("👨‍💻", command);
+
+            if (!command.data || !command.execute) {
+                throw new Error("A command isn't properly defined");
+            }
+            this.commands.set(command.data.name, command);
+        }
+    }
+
     init(): void {
+        this.loadModules();
         this.login(BOT_TOKEN)
             .then(() => console.log(`✅ ${this.user?.username} loged in`))
             .catch((err) => console.error(err));

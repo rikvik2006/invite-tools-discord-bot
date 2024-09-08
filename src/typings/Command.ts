@@ -7,13 +7,13 @@ import {
 import { ExtendedClient } from "../structures/ExstendedClient";
 
 /**
+ * Command Object rappresentation
+ *
  * {
- *  name: "commandName",
- *  description: "description",
  *  data: SlashComamndBuilder
- *  autocomplete: async ({ client, interaction }) => {
- *  }
  *  execute: async ({ client, interaction }) => {
+ *  }
+ *  autocomplete: async ({ client, interaction }) => {
  *  }
  * }
  */
