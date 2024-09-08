@@ -20,7 +20,7 @@ export class ExtendedClient extends Client {
 
     async importFile(filePath: string) {
         const importedFile = await import(filePath);
-        return importedFile;
+        return importedFile?.default;
     }
 
     async registerCommand({ commands, guildId }: RegisterCommandOptions) {
@@ -44,15 +44,15 @@ export class ExtendedClient extends Client {
     }
 
     async commandHandler() {
-        const commandFilesPath = await glob(
+        const commandFilePaths = await glob(
             `${path.join(__dirname, "..", "commands")}/*/*{.ts,.js}`,
             {
                 absolute: true,
             }
         );
-        console.log(commandFilesPath);
+        console.log(commandFilePaths);
 
-        for (let filePath in commandFilesPath) {
+        for (let filePath of commandFilePaths) {
             const command: CommandType = await this.importFile(filePath);
             console.log("👨‍💻", command);
 
