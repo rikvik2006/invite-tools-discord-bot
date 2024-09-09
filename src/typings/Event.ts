@@ -1,4 +1,5 @@
 import { ClientEvents, Events } from "discord.js";
+import { ExtendedClient } from "../structures/ExstendedClient";
 
 /**
  * Event Object rappresentation
@@ -14,6 +15,7 @@ import { ClientEvents, Events } from "discord.js";
  */
 
 export type EventExecuteFunction<Event extends keyof ClientEvents> = (
+    client: ExtendedClient,
     ...args: ClientEvents[Event]
 ) => any;
 

@@ -10,6 +10,7 @@ import { CommandType } from "../typings/Command";
 import { RegisterCommandOptions } from "../typings/Client";
 import { BOT_TOKEN, CLIENT_ID } from "../utils/environment";
 import path from "path";
+import { EventType } from "../typings/Event";
 
 export class ExtendedClient extends Client {
     commands: Collection<string, CommandType> = new Collection();
@@ -41,6 +42,7 @@ export class ExtendedClient extends Client {
 
     async loadModules() {
         this.commandHandler();
+        this.eventHandler();
     }
 
     async commandHandler() {
@@ -50,7 +52,6 @@ export class ExtendedClient extends Client {
                 absolute: true,
             }
         );
-        console.log(commandFilePaths);
 
         for (let filePath of commandFilePaths) {
             const command: CommandType = await this.importFile(filePath);
@@ -72,15 +73,24 @@ export class ExtendedClient extends Client {
         );
 
         for (let filePath of eventFilePaths) {
-            const event = await this.importFile(filePath);
+            const event: EventType<any> = await this.importFile(filePath);
             console.log("🧨", event);
+
+            if (!event.name) throw new Error("An event isn't properly defined");
+
+            if (event.once) {
+                // I want to pass ExtendedClient as an property of an object with event args, and this object will be passed as the only argument in execute funcion (similar as the commands)
+                this.once(event.name, (...args) =>
+                    event.execute(this, ...args)
+                );
+            } else {
+                this.on(event.name, (...args) => event.execute(this, ...args));
+            }
         }
     }
 
     init(): void {
         this.loadModules();
-        this.login(BOT_TOKEN)
-            .then(() => console.log(`✅ ${this.user?.username} loged in`))
-            .catch((err) => console.error(err));
+        this.login(BOT_TOKEN).catch((err) => console.error(err));
     }
 }
