@@ -63,6 +63,20 @@ export class ExtendedClient extends Client {
         }
     }
 
+    async eventHandler() {
+        const eventFilePaths = await glob(
+            `${path.join(__dirname, "..", "events")}/*{.ts,.js}`,
+            {
+                absolute: true,
+            }
+        );
+
+        for (let filePath of eventFilePaths) {
+            const event = await this.importFile(filePath);
+            console.log("🧨", event);
+        }
+    }
+
     init(): void {
         this.loadModules();
         this.login(BOT_TOKEN)
