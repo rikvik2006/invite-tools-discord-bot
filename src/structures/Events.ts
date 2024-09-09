@@ -1,4 +1,4 @@
-import { ClientEvents, Events } from "discord.js";
+import { ClientEvents } from "discord.js";
 import { EventExecuteFunction, EventType } from "../typings/Event";
 
 export class Event<Event extends keyof ClientEvents>
