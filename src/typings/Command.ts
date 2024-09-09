@@ -19,18 +19,20 @@ import { ExtendedClient } from "../structures/ExstendedClient";
  */
 
 // Interface for the execute options parameter
-export interface ExecuteOptions {
+export interface CommandExecuteOptions {
     client: ExtendedClient;
     interaction: ChatInputCommandInteraction;
     options: CommandInteractionOptionResolver;
 }
 
-export type ExecuteFunction = (options: ExecuteOptions) => any;
+export type CommandExecuteFunction = (options: CommandExecuteOptions) => any;
 
-export type AutocompleteFunction = (options: ExecuteOptions) => any;
+export type CommandAutocompleteFunction = (
+    options: CommandExecuteOptions
+) => any;
 
 export type CommandType = {
     data: SlashCommandBuilder;
-    execute: ExecuteFunction;
-    autocompleteFunction?: AutocompleteFunction;
+    execute: CommandExecuteFunction;
+    autocompleteFunction?: CommandAutocompleteFunction;
 };
